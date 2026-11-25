@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northwind Growth Questions</title>
+  <meta name="description" content="Three business questions about Northwind Traders: overlooked markets, product bundles, and new vs existing customers.">
+  <style>
+    :root {
+      --bg: #f7f6f3;
+      --surface: #ffffff;
+      --text: #1f2328;
+      --muted: #5b636b;
+      --border: #e3e1dc;
+      --accent: #2a6f97;
+      --accent-soft: #e8f0f5;
+      --highlight: #e07a1f;
+      --highlight-soft: #fdf1e6;
+      --radius: 10px;
+      --max: 920px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    header.wrap { padding-top: 56px; padding-bottom: 32px; }
+    .eyebrow {
+      font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--accent); font-weight: 600; margin: 0 0 8px;
+    }
+    h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0 0 16px; }
+    .intro { font-size: 18px; color: var(--muted); max-width: 720px; margin: 0; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 20px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--muted); }
+    .facts strong { color: var(--text); }
+
+    .glance {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px; margin: 32px 0 8px;
+    }
+    .glance a {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 18px;
+      transition: border-color .15s, transform .15s;
+    }
+    .glance a:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .glance .num { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: .06em; }
+    .glance .q { font-weight: 600; margin: 4px 0 8px; line-height: 1.35; }
+    .glance .a { font-size: 15px; color: var(--muted); margin: 0; }
+
+    section.question {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px clamp(18px, 4vw, 40px);
+      margin: 28px 0;
+    }
+    .qnum { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+    h2 { font-size: clamp(22px, 3.4vw, 28px); line-height: 1.25; margin: 0 0 24px; }
+    h3 {
+      font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin: 28px 0 8px;
+    }
+    p { margin: 0 0 12px; }
+    ul { margin: 0 0 12px; padding-left: 22px; }
+    li { margin: 6px 0; }
+    li ul { margin: 4px 0; }
+
+    figure { margin: 28px 0 8px; }
+    figure a { display: block; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; }
+    figure img { display: block; width: 100%; height: auto; }
+    figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+    .callout {
+      background: var(--accent-soft); border-left: 4px solid var(--accent);
+      border-radius: 6px; padding: 12px 16px; margin: 0 0 14px; font-weight: 600;
+    }
+    .implication {
+      background: var(--highlight-soft); border-left: 4px solid var(--highlight);
+      border-radius: 6px; padding: 16px 18px 6px;
+    }
+    .implication > p:first-child { font-weight: 600; }
+
+    .table-scroll { overflow-x: auto; margin: 8px 0 14px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 480px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { font-size: 13px; color: var(--muted); font-weight: 600; background: #fafaf8; }
+    td.num, th.num { text-align: right; white-space: nowrap; }
+
+    footer.wrap { padding-top: 24px; padding-bottom: 56px; color: var(--muted); font-size: 15px; }
+    footer .repo {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface); color: var(--text); text-decoration: none; font-weight: 600;
+    }
+    footer .repo:hover { border-color: var(--accent); }
+    footer p { margin: 12px 0 0; font-size: 14px; }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      header.wrap { padding-top: 36px; }
+      section.question { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="wrap">
+  <p class="eyebrow">Northwind Traders · Sales analysis</p>
+  <h1>Where should Northwind focus to grow?</h1>
+  <p class="intro">
+    This page answers three questions using Northwind's order history:
+    which markets the company may be overlooking, which products to bundle,
+    and whether to focus on new or existing customers. Each section explains
+    why the question matters, how it was analysed, what the data shows, and
+    what it means for the business.
+  </p>
+  <ul class="facts">
+    <li><strong>830</strong> orders</li>
+    <li><strong>91</strong> customers in 21 countries</li>
+    <li><strong>77</strong> products</li>
+    <li><strong>$1.27M</strong> revenue</li>
+    <li>Jul 1996 – May 1998</li>
+  </ul>
+
+  <nav class="glance" aria-label="Summary of answers">
+    <a href="#q1">
+      <div class="num">QUESTION 1</div>
+      <div class="q">Which high-potential markets is Northwind overlooking?</div>
+      <p class="a">None proven. Sweden is the best lead for a small pilot; USA, Germany and Brazil stay the priority.</p>
+    </a>
+    <a href="#q2">
+      <div class="num">QUESTION 2</div>
+      <div class="q">Which products should Northwind bundle?</div>
+      <p class="a">Pavlova + Camembert Pierrot and Dried Pears + Mozzarella, as cross-sells, tested before rollout.</p>
+    </a>
+    <a href="#q3">
+      <div class="num">QUESTION 3</div>
+      <div class="q">New customers or existing customers?</div>
+      <p class="a">Existing customers drove almost all growth. Prioritize them, and keep a small acquisition effort.</p>
+    </a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================ QUESTION 1 ============================ -->
+  <section class="question" id="q1">
+    <p class="qnum">Question 1 · Overlooked high-potential markets</p>
+    <h2>Which high-potential markets is Northwind overlooking?</h2>
+
+    <h3>Why it matters</h3>
+    <p>
+      Northwind's revenue is concentrated in a few large markets (USA, Germany,
+      Brazil, France). Markets that are growing fast but have few customers could
+      be cheap places to expand. But if their growth comes from one account,
+      putting money into them would be a mistake.
+    </p>
+
+    <h3>Approach</h3>
+    <p>
+      I counted a country as an overlooked high-potential market if it has fewer
+      customers than the typical country but grew revenue faster than most,
+      without losing customers. I ran this test twice, comparing Jul–Dec 1997
+      with 1996 and Jan–May 1998 with 1997, and only trusted countries that
+      passed both times.
+    </p>
+
+    <figure>
+      <a href="images/Question1_markets.png" target="_blank" rel="noopener">
+        <img src="images/Question1_markets.png" width="2550" height="1200" loading="lazy"
+             alt="Two bubble charts of number of customers against revenue growth by country, for Jul–Dec 1997 vs 1996 and Jan–May 1998 vs 1997. Sweden is the only country marked as overlooked high-potential in both periods; Spain is highlighted in green.">
+      </a>
+      <figcaption>Customers vs revenue growth by country, two comparisons. Bubble size = total revenue. Click to enlarge.</figcaption>
+    </figure>
+
+    <h3>Main finding</h3>
+    <p class="callout">
+      Most markets that look like opportunities have only 1–3 customers, so their
+      growth swings a lot from one period to the next. The data cannot prove that
+      any market is truly overlooked.
+    </p>
+    <ul>
+      <li><strong>Only Sweden qualifies in both periods.</strong> It has just 2 customers, but both grew in both periods:
+        <ul>
+          <li>Berglunds snabbköp: $4,324 → $7,949 (Jul–Dec)</li>
+          <li>Folk och fä HB: $497 → $13,644 (Jan–May)</li>
+        </ul>
+      </li>
+      <li><strong>The other picks did not last.</strong> Norway (−53%), Belgium (−31%) and Ireland (+32%, below the median) failed the Jul–Dec test. Denmark qualified in Jul–Dec, then fell 67% in early 1998. With 1–2 customers, growth comes and goes.</li>
+      <li><strong>Spain grew in both periods (+95% and +2,274%), but mainly through one customer.</strong> Godos Cocina Típica drove 89% of the early-1998 increase, even though the number of active customers rose from 1 to 4.</li>
+    </ul>
+
+    <h3>Business implication</h3>
+    <div class="implication">
+      <p>None of the overlooked markets is backed by strong evidence yet.</p>
+      <ul>
+        <li><strong>USA, Germany and Brazil remain the main revenue source and should stay the priority.</strong> Together they bring in about 46% of all revenue ($581K of $1.27M), and all three grew in both periods:
+          <ul>
+            <li>USA: +91% (Jul–Dec) and +186% (Jan–May)</li>
+            <li>Germany: +88% and +159%</li>
+            <li>Brazil: +21% and +304%. Brazil's Jul–Dec growth was below the median.</li>
+          </ul>
+        </li>
+        <li><strong>Sweden: run a small pilot rather than a big investment.</strong> For example, approach a few new Swedish customers and promote the products the current two are buying more of. Scale up only if new accounts start ordering.</li>
+        <li><strong>Spain</strong> is worth watching as a market where Northwind already has 5 accounts. Its next step is to grow the other four accounts so it doesn't depend on Godos Cocina Típica.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ QUESTION 2 ============================ -->
+  <section class="question" id="q2">
+    <p class="qnum">Question 2 · Product bundles</p>
+    <h2>Which products should Northwind bundle to increase order value?</h2>
+
+    <h3>Why it matters</h3>
+    <p>
+      A bundle that gets customers to add a second product makes each order bigger
+      without needing new customers. But if a pair only looks valuable because its
+      products are expensive, a bundle would just discount sales that would have
+      happened anyway.
+    </p>
+
+    <h3>Approach</h3>
+    <p>
+      I looked for pairs of active products that customers buy together more often
+      than chance, in at least 4 orders from at least 2 customers, and kept only
+      pairs that held up in both halves of the data and appeared in orders worth
+      more than similar-sized orders. For the pairs that passed, I compared orders
+      with both products against orders with only one of them, to see where the
+      extra value comes from.
+    </p>
+
+    <figure>
+      <a href="images/Question2_bundles.png" target="_blank" rel="noopener">
+        <img src="images/Question2_bundles.png" width="1950" height="1200" loading="lazy"
+             alt="Bubble chart of product pairs: orders containing both products against lift. Three recommended pairs are highlighted in orange: Uncle Bob's Organic Dried Pears + Mozzarella di Giovanni, Pavlova + Camembert Pierrot, and Camembert Pierrot + Fløtemysost.">
+      </a>
+      <figcaption>Product pairs bought together: how often (x) vs how much more than chance (y). Bubble size = average order value. Click to enlarge.</figcaption>
+    </figure>
+
+    <h3>Main finding</h3>
+    <p class="callout">
+      Buying the two products together adds the second product's value, but nothing
+      more. In orders with both products, the rest of the order is no bigger than in
+      orders with only one of them: its median is the same or lower for all three
+      pairs.
+    </p>
+    <ul>
+      <li><strong>Three pairs pass every test, and all three include a premium cheese:</strong></li>
+    </ul>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Bundle</th>
+            <th class="num">Orders together</th>
+            <th class="num">Avg order (both)</th>
+            <th class="num">Avg order (A only / B only)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Uncle Bob's Organic Dried Pears + Mozzarella di Giovanni</td><td class="num">4</td><td class="num">$2,922</td><td class="num">$1,930 / $1,893</td></tr>
+          <tr><td>Pavlova + Camembert Pierrot</td><td class="num">6</td><td class="num">$3,584</td><td class="num">$1,511 / $2,265</td></tr>
+          <tr><td>Camembert Pierrot + Fløtemysost</td><td class="num">6</td><td class="num">$2,930</td><td class="num">$2,352 / $1,671</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>The higher value comes from the products' own lines.</strong> For Pears + Mozzarella, the two products are worth $1,524 when bought together, about the same as when bought separately ($734 + $662). The other two pairs show somewhat larger spend on the pair when bought together, but this rests on only 6 orders each.</li>
+      <li><strong>Category bundles have no signal.</strong> None of the 28 category pairs is bought together more often than chance.</li>
+      <li><strong>The most frequent pair is a poor bundle.</strong> Sir Rodney's Scones + Sirop d'érable are bought together most often (8 orders), but in low-value orders, so bundling them would not raise order value.</li>
+    </ul>
+
+    <h3>Business implication</h3>
+    <div class="implication">
+      <ul>
+        <li><strong>Use these bundles as cross-sells, not as a way to grow the whole order.</strong> The realistic gain is getting customers who buy one product to add the other, which adds roughly $400–900 to that order.</li>
+        <li><strong>Start with Pavlova + Camembert Pierrot and Dried Pears + Mozzarella di Giovanni.</strong> Offer the cheese as a suggested add-on to customers buying the other product, with little or no discount, because customers who buy both already pay full value for them.</li>
+        <li><strong>Drop Camembert Pierrot + Fløtemysost.</strong> Its orders are only about average for their size, and the rest of those orders is smaller than when either product is bought alone.</li>
+        <li><strong>Test before rolling out.</strong> With only 4–6 orders behind each pair, run the offer for a limited period and compare order values with customers who were not offered it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ QUESTION 3 ============================ -->
+  <section class="question" id="q3">
+    <p class="qnum">Question 3 · New vs existing customers</p>
+    <h2>Should Northwind prioritize acquiring new customers or growing revenue from existing customers?</h2>
+
+    <h3>Why it matters</h3>
+    <p>
+      Winning new customers and growing existing ones need different budgets and
+      different teams. Northwind should put its effort where growth has actually
+      come from, without ignoring the risk of depending on too few customers.
+    </p>
+
+    <h3>Approach</h3>
+    <p>
+      I split each quarter's revenue into new customers (the quarter of their first
+      order) and existing customers (all later orders), and broke existing-customer
+      growth into more customers ordering, more orders per customer, and bigger
+      orders. I compared the same days year over year, as in Question 1, and
+      treated Jul–Dec 1996 as a warm-up period because the data starts on
+      Jul 4, 1996.
+    </p>
+
+    <figure>
+      <a href="images/Question3_customers.png" target="_blank" rel="noopener">
+        <img src="images/Question3_customers.png" width="1800" height="1050" loading="lazy"
+             alt="Stacked bar chart of quarterly revenue from existing and new customers, Q3 1996 to Q2 1998, with a line showing new customers acquired per quarter falling from 42 to 0. Existing-customer revenue grows to $298K in Q1 1998.">
+      </a>
+      <figcaption>Quarterly revenue from existing (blue) and new (orange) customers, with new customers acquired per quarter. Q2 1998 covers Apr 1 – May 6 only. Click to enlarge.</figcaption>
+    </figure>
+
+    <h3>Main finding</h3>
+    <p class="callout">
+      Almost all growth came from existing customers, mainly because they ordered
+      more often.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="num">Jul–Dec 1997 vs 1996</th>
+            <th class="num">Jan 1 – May 6, 1998 vs 1997</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Revenue growth</td><td class="num">+$123K</td><td class="num">+$240K</td></tr>
+          <tr><td>From existing customers</td><td class="num">$118.8K (96%)</td><td class="num">$237.8K (99%)</td></tr>
+          <tr><td>From new customers</td><td class="num">$4.6K (4 customers)</td><td class="num">$2.0K (1 customer)</td></tr>
+          <tr><td>Orders per customer</td><td class="num">+24% (2.3 → 2.9)</td><td class="num">+70% (2.0 → 3.3)</td></tr>
+          <tr><td>Customers ordering</td><td class="num">+12%</td><td class="num">+21%</td></tr>
+          <tr><td>Average order value</td><td class="num">+13%</td><td class="num">+6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Acquisition has nearly stopped.</strong> New customers per quarter fell from 10 in Q1 1997 to 8, 3, 1 and 1, and none so far in Q2 1998. 89 of the 91 customers in the database have already ordered.</li>
+      <li><strong>New customers are worth less, so far.</strong> Customers won in 1997 or later spend a median of $1,309 per quarter after their first quarter, against $1,827 for customers already buying in 1996.</li>
+      <li><strong>Some known customers are not buying.</strong> 5 customers have not ordered in the last 6 months (they brought in $36.5K over the whole period), and 2 have never ordered (FISSA, PARIS).</li>
+      <li><strong>Limitations:</strong>
+        <ul>
+          <li>The data has no marketing costs and no list of potential customers. So "acquisition has dried up" may mean Northwind stopped trying, not that no customers are left to win.</li>
+          <li>The comparison of customer value is unfair to new customers: they have had less time to grow, and the 1996 customers include the long-standing large accounts.</li>
+          <li>Customers first seen in Jul–Dec 1996 may have been buying before the data starts, so 1996 is not used to judge acquisition.</li>
+          <li>Q2 1998 covers only Apr 1 – May 6. Its $142K is a faster pace than any full quarter, not a drop.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Business implication</h3>
+    <div class="implication">
+      <ul>
+        <li><strong>Prioritize growing existing customers</strong>, especially how often they order, since that is what has driven growth. For example, offer reorder reminders or standing orders to the customers who already order regularly.</li>
+        <li><strong>Win back the 5 lapsed customers and the 2 who never ordered.</strong> They are known contacts and the cheapest revenue to recover.</li>
+        <li><strong>Keep a small acquisition effort rather than dropping it.</strong> With almost no new customers coming in, Northwind depends entirely on its current 89 accounts. A targeted pilot, such as the Sweden pilot from Question 1, keeps some new customers coming in without a large budget.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <a class="repo" id="github-link" href="https://github.com/lingxialulu/northwind-analysis" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    View the code on GitHub
+  </a>
+  <p>Analysis in Python (pandas, matplotlib) on the Northwind sample database. The repository's README explains how to reproduce every number and chart.</p>
+</footer>
+
+</body>
+</html>

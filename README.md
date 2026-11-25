@@ -134,7 +134,7 @@ The webpage uses copies of the charts. After rerunning the scripts, copy the new
 cp Question1_markets.png Question2_bundles.png Question3_customers.png website/images/
 ```
 
-The text on the webpage is written by hand from the three `Question*_summary.md` files, so it does not update automatically if the results change.
+The text on the webpage is written from the three `Question*_summary.md` files, so it does not update automatically if the results change.
 
 To view the page locally, open `website/index.html` in a browser. To publish it, upload the `website` folder to a static host such as Netlify.
 
